@@ -5,24 +5,186 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dayline — الحساب</title>
   <link rel="stylesheet" href="css/shared.css">
-  <!-- الشخص 2: ستايلات صفحة الحساب تتكتب هنا أو في css/account.css -->
+  <link rel="stylesheet" href="css/account.css">
 </head>
 <body>
   <main class="container">
-    <a href="index.html" class="btn">← رجوع</a>
+    <a href="index.html" class="btn" id="backBtn">← رجوع</a>
 
-    <!-- الشخص 2: كارت بيانات الحساب (تاسك 2.1) -->
-    <section id="accountInfo"></section>
+    <!-- تاسك 2.1: كارت بيانات الحساب -->
+    <section id="accountInfo" class="card">
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">اسم الحساب</span>
+          <strong id="accName">—</strong>
+        </div>
 
-    <!-- الشخص 2: جدول الشهر (تاسك 2.2) -->
-    <section id="calendar"></section>
+        <div class="info-item">
+          <span class="info-label">رابط الحساب</span>
+          <a id="accLink" href="#" target="_blank" rel="noopener noreferrer">—</a>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label">اسم المستخدم</span>
+          <span id="accUser">—</span>
+        </div>
+
+        <div class="info-item">
+          <span class="info-label">النيتش</span>
+          <span id="accNiche">—</span>
+        </div>
+
+        <div class="info-item fit">
+          <span class="info-label">كلمة المرور</span>
+          <div class="row">
+            <span id="accPass">••••••</span>
+            <button type="button" id="togglePassBtn" class="btn" aria-label="إظهار أو إخفاء كلمة المرور">👁</button>
+            <button type="button" id="copyPassBtn" class="btn" aria-label="نسخ كلمة المرور">نسخ</button>
+          </div>
+        </div>
+
+        <div class="info-item fit">
+          <span class="info-label">عدد المتابعين الحالي</span>
+          <div class="row">
+            <span id="accFollowers" class="followers-num">0</span>
+            <button type="button" id="refreshFollowersBtn" class="btn" aria-label="تحديث من انستجرام">↻</button>
+            <button type="button" id="editFollowersBtn" class="btn">تعديل</button>
+            <span id="followersEdit" class="row hidden">
+              <input type="number" id="followersInput" class="input small-input" min="0">
+              <button type="button" id="saveFollowersBtn" class="btn btn-primary">حفظ</button>
+              <button type="button" id="cancelFollowersBtn" class="btn">إلغاء</button>
+            </span>
+          </div>
+          <span class="followers-meta" id="followersMeta"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- تاسك 2.2: جدول الشهر -->
+    <section id="calendar">
+      <div class="cal-header">
+        <button type="button" id="prevMonth" class="btn">السابق</button>
+        <h2 id="calTitle"></h2>
+        <button type="button" id="nextMonth" class="btn">التالي</button>
+      </div>
+      <div class="cal-weekdays">
+        <div>الأحد</div>
+        <div>الاثنين</div>
+        <div>الثلاثاء</div>
+        <div>الأربعاء</div>
+        <div>الخميس</div>
+        <div>الجمعة</div>
+        <div>السبت</div>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </section>
   </main>
 
   <!-- زرار رفع CSV (تاسك 2.4) -->
   <button id="uploadCsvBtn" class="fab" aria-label="رفع CSV">+</button>
 
-  <!-- الشخص 2: مودال تفاصيل اليوم (تاسك 2.3) -->
-  <!-- الشخص 2: مودال رفع CSV (تاسك 2.4) -->
+  <!-- تاسك 2.3: مودال تفاصيل اليوم -->
+  <div class="modal-backdrop" id="dayModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="dayModalTitle">
+      <button type="button" class="modal-close" data-close aria-label="إغلاق">×</button>
+
+      <!-- وضع العرض -->
+      <div id="dayView">
+        <h3 id="dayModalTitle"></h3>
+        <div class="modal-section"><h4>التاريخ</h4><div id="viewDate"></div></div>
+        <div class="modal-section"><h4>الوصف</h4><div id="viewDescription"></div></div>
+        <div class="modal-section">
+          <h4>البرومبت</h4>
+          <div class="prompt-box">
+            <span id="viewPrompt"></span>
+            <button type="button" id="copyPromptBtn" class="btn">نسخ</button>
+          </div>
+        </div>
+        <div class="modal-section"><h4>نوع المحتوى</h4><div id="viewType"></div></div>
+
+        <div id="videoSection" class="hidden">
+          <div class="modal-section"><h4>كلمات البحث</h4><div class="tags" id="viewKeywords"></div></div>
+          <div class="modal-section"><h4>الأغنية / الموسيقى الترند</h4><div id="viewMusic"></div></div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="editIdeaBtn" class="btn btn-primary">تعديل</button>
+        </div>
+      </div>
+
+      <!-- وضع التعديل / الإضافة -->
+      <form id="dayForm" class="hidden" novalidate>
+        <h3 id="formHeading">إضافة فكرة</h3>
+        <input type="hidden" id="formDate">
+
+        <div class="field">
+          <label for="formTitle">اسم الفكرة</label>
+          <input type="text" id="formTitle" class="input" required>
+        </div>
+        <div class="field">
+          <label for="formDescription">الوصف</label>
+          <textarea id="formDescription" class="textarea" rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label for="formPrompt">البرومبت</label>
+          <textarea id="formPrompt" class="textarea" rows="4"></textarea>
+        </div>
+        <div class="field">
+          <label for="formType">نوع المحتوى</label>
+          <select id="formType" class="select">
+            <option value="image">صورة</option>
+            <option value="video">فيديو</option>
+          </select>
+        </div>
+
+        <div id="formVideoFields" class="hidden">
+          <div class="field">
+            <label for="formKeywords">كلمات البحث (افصل بينها بفاصلة)</label>
+            <input type="text" id="formKeywords" class="input">
+          </div>
+          <div class="field">
+            <label for="formMusic">الأغنية / الموسيقى الترند</label>
+            <input type="text" id="formMusic" class="input">
+          </div>
+        </div>
+
+        <p class="error-text" id="formError"></p>
+        <div class="modal-actions">
+          <button type="button" id="cancelFormBtn" class="btn">إلغاء</button>
+          <button type="submit" class="btn btn-primary">حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- تاسك 2.4: مودال رفع CSV -->
+  <div class="modal-backdrop" id="csvModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="csvModalTitle">
+      <button type="button" class="modal-close" data-close aria-label="إغلاق">×</button>
+      <h3 id="csvModalTitle">رفع ملف CSV</h3>
+
+      <div class="modal-section">
+        <input type="file" id="csvFileInput" accept=".csv">
+      </div>
+      <div class="modal-section">
+        <a href="#" id="downloadSampleLink" download="dayline-sample.csv">تحميل ملف CSV نموذجي</a>
+      </div>
+
+      <div id="csvPreview" class="hidden">
+        <p id="csvCount"></p>
+        <table class="csv-table" id="csvPreviewTable"></table>
+        <div class="csv-errors" id="csvErrors"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn" data-close>إلغاء</button>
+        <button type="button" id="confirmCsvBtn" class="btn btn-primary" disabled>تأكيد الرفع</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- رسالة "تم النسخ" -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script type="module" src="js/account.js"></script>

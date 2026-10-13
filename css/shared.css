@@ -4,35 +4,54 @@
    ممنوع كتابة كود لون مباشرة في أي ملف تاني، استخدم var(--...) بس.
    ========================================================== */
 
+/* hide all scrollbars but keep scrolling working */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge / IE */
+}
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, new Edge */
+  width: 0;
+  height: 0;
+}
+
 :root {
   /* الخلفيات */
-  --bg: #0D0F14;
+  --bg: #0d0f14;
   --surface: #151922;
-  --surface-2: #1D222D;
-  --border: #2A3140;
+  --surface-2: #1d222d;
+  --border: #2a3140;
 
   /* النصوص */
-  --text: #E8ECF3;
-  --muted: #8A93A6;
+  --text: #e8ecf3;
+  --muted: #8a93a6;
 
   /* ألوان التمييز */
-  --primary: #2AA0E8;
-  --primary-hover: #4DB3F2;
-  --idea: #62C370;
+  --primary: #2aa0e8;
+  --primary-hover: #4db3f2;
+  --idea: #62c370;
   --idea-soft: rgba(98, 195, 112, 0.15);
-  --today: #F5B942;
-  --video: #A78BFA;
-  --image: #2DD4BF;
-  --danger: #F0524F;
+  --today: #f5b942;
+  --video: #a78bfa;
+  --image: #2dd4bf;
+  --danger: #f0524f;
 
   --radius: 12px;
   --gap: 16px;
   --font: "Segoe UI", Tahoma, "Noto Sans Arabic", system-ui, sans-serif;
 }
 
-*, *::before, *::after { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-html, body { margin: 0; padding: 0; }
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
 
 body {
   background: var(--bg);
@@ -42,8 +61,13 @@ body {
   min-height: 100vh;
 }
 
-a { color: var(--primary); text-decoration: none; }
-a:hover { color: var(--primary-hover); }
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--primary-hover);
+}
 
 /* ---------- تخطيط الصفحة ---------- */
 .container {
@@ -63,10 +87,14 @@ a:hover { color: var(--primary-hover); }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 16px;
-  transition: border-color .15s;
+  transition: border-color 0.15s;
 }
-.card.clickable { cursor: pointer; }
-.card.clickable:hover { border-color: var(--primary); }
+.card.clickable {
+  cursor: pointer;
+}
+.card.clickable:hover {
+  border-color: var(--primary);
+}
 
 /* ---------- الأزرار ---------- */
 .btn {
@@ -81,10 +109,17 @@ a:hover { color: var(--primary-hover); }
   color: var(--text);
   font: inherit;
   cursor: pointer;
-  transition: background .15s, border-color .15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
-.btn:hover { border-color: var(--primary); }
-.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn:hover {
+  border-color: var(--primary);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
 
 .btn-primary {
   background: var(--primary);
@@ -92,9 +127,15 @@ a:hover { color: var(--primary-hover); }
   color: var(--bg);
   font-weight: 600;
 }
-.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn-primary:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
 
-.btn-danger { border-color: var(--danger); color: var(--danger); }
+.btn-danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
 
 /* زرار + الدائري الثابت */
 .fab {
@@ -110,17 +151,32 @@ a:hover { color: var(--primary-hover); }
   font-size: 28px;
   line-height: 1;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
-  transition: background .15s, transform .15s;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transition:
+    background 0.15s,
+    transform 0.15s;
   z-index: 50;
 }
-.fab:hover { background: var(--primary-hover); transform: scale(1.06); }
+.fab:hover {
+  background: var(--primary-hover);
+  transform: scale(1.06);
+}
 
 /* ---------- الفورم ---------- */
-.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-.field label { color: var(--muted); font-size: .85rem; }
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.field label {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
 
-.input, .textarea, .select {
+.input,
+.textarea,
+.select {
   width: 100%;
   padding: 10px 12px;
   background: var(--surface-2);
@@ -129,26 +185,37 @@ a:hover { color: var(--primary-hover); }
   color: var(--text);
   font: inherit;
 }
-.input:focus, .textarea:focus, .select:focus {
+.input:focus,
+.textarea:focus,
+.select:focus {
   outline: none;
   border-color: var(--primary);
 }
-.textarea { min-height: 90px; resize: vertical; }
+.textarea {
+  min-height: 90px;
+  resize: vertical;
+}
 
-.error-text { color: var(--danger); font-size: .85rem; margin: 8px 0 0; }
+.error-text {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin: 8px 0 0;
+}
 
 /* ---------- المودال ---------- */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, .65);
+  background: rgba(0, 0, 0, 0.65);
   display: none;
   align-items: center;
   justify-content: center;
   padding: 16px;
   z-index: 100;
 }
-.modal-backdrop.open { display: flex; }
+.modal-backdrop.open {
+  display: flex;
+}
 
 .modal {
   width: 100%;
@@ -166,7 +233,10 @@ a:hover { color: var(--primary-hover); }
   justify-content: space-between;
   margin-bottom: 16px;
 }
-.modal-header h2 { margin: 0; font-size: 1.2rem; }
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
 .modal-close {
   background: none;
   border: 0;
@@ -174,19 +244,32 @@ a:hover { color: var(--primary-hover); }
   font-size: 24px;
   cursor: pointer;
 }
-.modal-close:hover { color: var(--text); }
-.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+.modal-close:hover {
+  color: var(--text);
+}
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
 
 /* ---------- شارات النوع ---------- */
 .badge {
   display: inline-block;
   padding: 2px 10px;
   border-radius: 999px;
-  font-size: .75rem;
+  font-size: 0.75rem;
   border: 1px solid var(--border);
 }
-.badge-video { color: var(--video); border-color: var(--video); }
-.badge-image { color: var(--image); border-color: var(--image); }
+.badge-video {
+  color: var(--video);
+  border-color: var(--video);
+}
+.badge-image {
+  color: var(--image);
+  border-color: var(--image);
+}
 
 .tag {
   display: inline-block;
@@ -195,11 +278,12 @@ a:hover { color: var(--primary-hover); }
   background: var(--surface-2);
   border: 1px solid var(--border);
   border-radius: 999px;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
 /* ---------- حالات الشاشة ---------- */
-.empty-state, .loading-state {
+.empty-state,
+.loading-state {
   text-align: center;
   color: var(--muted);
   padding: 64px 16px;
@@ -207,6 +291,341 @@ a:hover { color: var(--primary-hover); }
 
 /* ---------- موبايل ---------- */
 @media (max-width: 600px) {
-  .container { padding: 16px 12px 96px; }
-  .fab { right: 16px; bottom: 16px; }
+  .container {
+    padding: 16px 12px 96px;
+  }
+  .fab {
+    right: 16px;
+    bottom: 16px;
+  }
+}
+
+/* ==========================================================
+   Dayline — account.css
+   ستايلات صفحة الحساب فقط. الألوان من var(--...) في shared.css.
+   ========================================================== */
+
+.hidden {
+  display: none !important;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ---------- 2.1 كارت بيانات الحساب ---------- */
+#backBtn {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+#accountInfo {
+  margin: 50px 0 100px;
+  padding: 20px 24px;
+}
+
+/* كل البيانات في صف واحد على الشاشات الكبيرة */
+.info-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* أزرار صغيرة جوه كارت البيانات */
+.info-item .btn {
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  border-radius: 6px;
+  gap: 4px;
+}
+.info-item.fit {
+  flex: 0 0 auto;
+}
+
+.followers-meta {
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+/* على الشاشات الصغيرة ينزلوا على أكتر من صف */
+@media (max-width: 1000px) {
+  .info-grid {
+    flex-wrap: wrap;
+  }
+  .info-item {
+    flex: 1 1 200px;
+  }
+  .info-item.fit {
+    flex: 1 1 200px;
+  }
+}
+
+.info-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.info-item a,
+.info-item strong,
+.info-item span {
+  overflow-wrap: anywhere;
+}
+
+#accPass {
+  font-family: ui-monospace, Consolas, monospace;
+  letter-spacing: 1px;
+}
+
+.followers-num {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--primary);
+  margin-inline-end: 4px;
+}
+
+.small-input {
+  width: 100px;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+/* ---------- 2.2 التقويم ---------- */
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8px 0 20px;
+}
+.cal-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+.cal-header .btn {
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+.cal-weekdays,
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cal-weekdays {
+  margin-bottom: 10px;
+}
+
+.cal-weekdays div {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding: 4px 0;
+}
+
+.day {
+  min-height: 92px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.day:hover {
+  border-color: var(--primary);
+}
+
+.day .num {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.day small {
+  font-size: 0.72rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.day.empty {
+  background: transparent;
+  border: 0;
+  cursor: default;
+}
+
+.day.filled {
+  background: var(--idea-soft);
+  border-color: var(--idea);
+}
+.day.filled .num {
+  color: var(--text);
+}
+
+.day.today {
+  border-color: var(--today);
+  box-shadow: 0 0 0 1px var(--today);
+}
+
+/* ---------- 2.3 مودال اليوم ---------- */
+.modal {
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 12px;
+  inset-inline-end: 16px;
+}
+
+#dayModalTitle,
+#formHeading,
+#csvModalTitle {
+  margin: 0 0 12px;
+  padding-inline-end: 32px;
+  font-size: 1.2rem;
+}
+
+.modal-section {
+  margin: 14px 0;
+}
+.modal-section h4 {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.prompt-box {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.prompt-box .btn {
+  flex-shrink: 0;
+  padding: 4px 12px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tags .tag {
+  margin: 0;
+}
+
+.csv-errors {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin: 8px 0 0;
+}
+
+/* ---------- 2.4 رفع CSV ---------- */
+.csv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+  margin: 10px 0;
+  display: block;
+  overflow-x: auto;
+}
+.csv-table th,
+.csv-table td {
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  text-align: start;
+  white-space: nowrap;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.csv-table th {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+.csv-table tr.row-error td {
+  background: color-mix(in srgb, var(--danger) 18%, transparent);
+  color: var(--danger);
+}
+
+input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  background: var(--surface-2);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font: inherit;
+}
+
+/* ---------- رسالة "تم النسخ" ---------- */
+.toast {
+  position: fixed;
+  bottom: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 200;
+}
+.toast.show {
+  opacity: 1;
+}
+
+/* ---------- موبايل ---------- */
+@media (max-width: 600px) {
+  #accountInfo {
+    padding: 16px;
+  }
+  .info-grid {
+    gap: 20px;
+  }
+  .cal-weekdays,
+  .cal-grid {
+    gap: 4px;
+  }
+  .day {
+    min-height: 64px;
+    padding: 4px;
+  }
+  .day small {
+    font-size: 0.65rem;
+  }
+  .followers-num {
+    font-size: 2rem;
+  }
 }
