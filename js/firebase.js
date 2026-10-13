@@ -1,76 +1,126 @@
-// نسخة مؤقتة: بتخزّن في localStorage بنفس أسماء وأشكال دوال Firebase الحقيقي.
-// لما يتم الربط الحقيقي هيتبدل الملف ده وباقي الكود يشتغل من غير تعديل.
+// طبقة البيانات الحقيقية (Firestore). نفس أسماء وأشكال الدوال اللي الفرونت بيستخدمها.
+//
+// الهيكل في Firestore (كل مستخدم بياناته معزولة تحت uid بتاعه):
+//   users/{uid}/accounts/{accountId}              name, url, username, password, niche, followers, createdAt
+//   users/{uid}/accounts/{accountId}/ideas/{date} date, title, description, prompt, type, keywords, music
+//
+// أي صفحة بتستورد الملف ده بتستنى تسجيل الدخول أوتوماتيك، ولو المستخدم مش مسجّل
+// بتتحوّل لـ login.html. يعني مفيش تعديل مطلوب في home.js أو account.js.
+import {
+  collection,
+  doc,
+  addDoc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  query,
+  where,
+  orderBy,
+  documentId,
+  writeBatch,
+  serverTimestamp,
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import { db, waitForUser } from "./auth.js";
 
-const KEY = "dayline_db";
+export { logout } from "./auth.js";
 
-function load() {
-  try {
-    return JSON.parse(localStorage.getItem(KEY)) || { accounts: {} };
-  } catch {
-    return { accounts: {} };
+const user = await waitForUser();
+if (!user) {
+  location.replace("login.html");
+  await new Promise(() => {}); // وقف تنفيذ الصفحة لحد ما التحويل يتم
+}
+
+const accountsCol = collection(db, "users", user.uid, "accounts");
+const accountRef = (id) => doc(db, "users", user.uid, "accounts", id);
+const ideasCol = (id) => collection(db, "users", user.uid, "accounts", id, "ideas");
+
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const MONTH_RE = /^\d{4}-\d{2}$/;
+
+// Timestamp -> milliseconds عشان الفرونت يتعامل مع أرقام عادية
+function plain(snap) {
+  const data = snap.data();
+  for (const k of ["createdAt", "updatedAt"]) {
+    if (data[k]?.toMillis) data[k] = data[k].toMillis();
   }
+  return { id: snap.id, ...data };
 }
 
-function save(db) {
-  localStorage.setItem(KEY, JSON.stringify(db));
-}
+/* ---------------- الحسابات ---------------- */
 
 export async function getAccounts() {
-  const db = load();
-  return Object.entries(db.accounts).map(([id, a]) => ({ id, ...a, ideas: undefined }));
+  const snap = await getDocs(query(accountsCol, orderBy("createdAt", "asc")));
+  return snap.docs.map(plain);
 }
 
 export async function addAccount(data) {
-  const db = load();
-  const id = "acc_" + Date.now().toString(36);
-  db.accounts[id] = {
-    name: data.name,
-    url: data.url,
-    username: data.username,
-    password: data.password,
-    niche: data.niche,
+  const ref = await addDoc(accountsCol, {
+    name: String(data.name ?? "").trim(),
+    url: String(data.url ?? "").trim(),
+    username: String(data.username ?? "").trim(),
+    password: String(data.password ?? ""),
+    niche: String(data.niche ?? "").trim(),
     followers: 0,
-    createdAt: Date.now(),
-    ideas: {},
-  };
-  save(db);
-  return id;
+    createdAt: serverTimestamp(),
+  });
+  return ref.id;
 }
 
 export async function getAccount(id) {
-  const a = load().accounts[id];
-  return a ? { id, ...a, ideas: undefined } : null;
+  const snap = await getDoc(accountRef(id));
+  return snap.exists() ? plain(snap) : null;
 }
 
 export async function updateFollowers(id, n) {
-  const db = load();
-  if (!db.accounts[id]) throw new Error("الحساب غير موجود");
-  db.accounts[id].followers = Number(n) || 0;
-  save(db);
+  const followers = Number(n);
+  if (!Number.isFinite(followers) || followers < 0) throw new Error("عدد المتابعين غير صحيح");
+  await updateDoc(accountRef(id), { followers, followersUpdatedAt: serverTimestamp() });
 }
 
-// يرجّع Map: { "2026-11-05": idea, ... } لأفكار الشهر (month = "YYYY-MM")
+/* ---------------- الأفكار ---------------- */
+
+// بيرجّع Map: التاريخ "YYYY-MM-DD" -> الفكرة، لشهر واحد (month = "YYYY-MM")
 export async function getIdeas(id, month) {
-  const ideas = load().accounts[id]?.ideas || {};
-  const result = {};
-  for (const [date, idea] of Object.entries(ideas)) {
-    if (date.startsWith(month)) result[date] = idea;
-  }
-  return result;
+  if (!MONTH_RE.test(month)) throw new Error("صيغة الشهر لازم تكون YYYY-MM");
+  const q = query(
+    ideasCol(id),
+    where(documentId(), ">=", `${month}-01`),
+    where(documentId(), "<=", `${month}-31`)
+  );
+  const snap = await getDocs(q);
+  const map = new Map();
+  snap.forEach((d) => map.set(d.id, plain(d)));
+  return map;
 }
 
-// idea = { date, title, description, prompt, type: "image"|"video", keywords, music }
+function cleanIdea(idea) {
+  if (!DATE_RE.test(String(idea?.date))) throw new Error("تاريخ الفكرة غير صحيح: " + idea?.date);
+  return {
+    date: idea.date,
+    title: String(idea.title ?? "").trim(),
+    description: String(idea.description ?? ""),
+    prompt: String(idea.prompt ?? ""),
+    type: idea.type === "video" ? "video" : "image",
+    keywords: String(idea.keywords ?? ""),
+    music: String(idea.music ?? ""),
+    updatedAt: serverTimestamp(),
+  };
+}
+
+// التاريخ هو معرّف الفكرة، فحفظ نفس اليوم تاني بيعدّل الفكرة القديمة
 export async function saveIdea(id, idea) {
-  const db = load();
-  if (!db.accounts[id]) throw new Error("الحساب غير موجود");
-  db.accounts[id].ideas[idea.date] = idea;
-  save(db);
+  const clean = cleanIdea(idea);
+  await setDoc(doc(ideasCol(id), clean.date), clean);
 }
 
-// rows = مصفوفة أفكار بنفس شكل saveIdea. نفس التاريخ يتحدّث بدل ما يتكرر.
+// رفع كذا فكرة مرة واحدة (Firestore بيسمح بـ 500 عملية في الـ batch، فبنقسّم لـ 400)
 export async function importIdeasCSV(id, rows) {
-  const db = load();
-  if (!db.accounts[id]) throw new Error("الحساب غير موجود");
-  for (const row of rows) db.accounts[id].ideas[row.date] = row;
-  save(db);
+  const ideas = rows.map(cleanIdea); // أي صف غلط يوقف العملية قبل ما يتكتب أي حاجة
+  for (let i = 0; i < ideas.length; i += 400) {
+    const batch = writeBatch(db);
+    for (const idea of ideas.slice(i, i + 400)) batch.set(doc(ideasCol(id), idea.date), idea);
+    await batch.commit();
+  }
+  return ideas.length;
 }

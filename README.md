@@ -47,3 +47,12 @@ accounts/{id}/ideas/{YYYY-MM-DD}: date, title, description, prompt, type (image|
 date,title,description,prompt,type,keywords,music
 2026-11-01,فكرة 1,وصف...,برومبت...,video,"كلمة1, كلمة2",اسم الأغنية
 ```
+
+## ربط Firebase
+
+- `js/auth.js`: تهيئة Firebase وتسجيل الدخول (مفيش حد يستورد من Firebase مباشرة غيره).
+- `js/firebase.js`: دوال Firestore بنفس الأسماء. أي صفحة بتستورده بتتحوّل لـ `login.html` لو مفيش تسجيل دخول.
+- `login.html` + `js/login.js`: صفحة الدخول.
+- `firestore.rules`: كل مستخدم يقرا ويكتب بياناته بس (`users/{uid}/...`).
+- لعمل خروج: `import { logout } from "./firebase.js"` ونادي `logout()` من أي زرار.
+- نشر القواعد: `firebase deploy --only firestore:rules` (أو انسخ `firestore.rules` في Console ← Firestore ← Rules).
