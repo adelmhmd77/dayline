@@ -1,0 +1,212 @@
+/* ==========================================================
+   Dayline — shared.css
+   الألوان والأزرار والمودال المشتركة بين الصفحتين.
+   ممنوع كتابة كود لون مباشرة في أي ملف تاني، استخدم var(--...) بس.
+   ========================================================== */
+
+:root {
+  /* الخلفيات */
+  --bg: #0D0F14;
+  --surface: #151922;
+  --surface-2: #1D222D;
+  --border: #2A3140;
+
+  /* النصوص */
+  --text: #E8ECF3;
+  --muted: #8A93A6;
+
+  /* ألوان التمييز */
+  --primary: #2AA0E8;
+  --primary-hover: #4DB3F2;
+  --idea: #62C370;
+  --idea-soft: rgba(98, 195, 112, 0.15);
+  --today: #F5B942;
+  --video: #A78BFA;
+  --image: #2DD4BF;
+  --danger: #F0524F;
+
+  --radius: 12px;
+  --gap: 16px;
+  --font: "Segoe UI", Tahoma, "Noto Sans Arabic", system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+a { color: var(--primary); text-decoration: none; }
+a:hover { color: var(--primary-hover); }
+
+/* ---------- تخطيط الصفحة ---------- */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px 96px;
+}
+
+.page-title {
+  font-size: 1.6rem;
+  margin: 0 0 24px;
+}
+
+/* ---------- الكروت ---------- */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  transition: border-color .15s;
+}
+.card.clickable { cursor: pointer; }
+.card.clickable:hover { border-color: var(--primary); }
+
+/* ---------- الأزرار ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.btn:hover { border-color: var(--primary); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--bg);
+  font-weight: 600;
+}
+.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+
+.btn-danger { border-color: var(--danger); color: var(--danger); }
+
+/* زرار + الدائري الثابت */
+.fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--bg);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .4);
+  transition: background .15s, transform .15s;
+  z-index: 50;
+}
+.fab:hover { background: var(--primary-hover); transform: scale(1.06); }
+
+/* ---------- الفورم ---------- */
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.field label { color: var(--muted); font-size: .85rem; }
+
+.input, .textarea, .select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font: inherit;
+}
+.input:focus, .textarea:focus, .select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.textarea { min-height: 90px; resize: vertical; }
+
+.error-text { color: var(--danger); font-size: .85rem; margin: 8px 0 0; }
+
+/* ---------- المودال ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .65);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+}
+.modal-backdrop.open { display: flex; }
+
+.modal {
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.modal-header h2 { margin: 0; font-size: 1.2rem; }
+.modal-close {
+  background: none;
+  border: 0;
+  color: var(--muted);
+  font-size: 24px;
+  cursor: pointer;
+}
+.modal-close:hover { color: var(--text); }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+
+/* ---------- شارات النوع ---------- */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: .75rem;
+  border: 1px solid var(--border);
+}
+.badge-video { color: var(--video); border-color: var(--video); }
+.badge-image { color: var(--image); border-color: var(--image); }
+
+.tag {
+  display: inline-block;
+  padding: 2px 10px;
+  margin: 0 4px 4px 0;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: .8rem;
+}
+
+/* ---------- حالات الشاشة ---------- */
+.empty-state, .loading-state {
+  text-align: center;
+  color: var(--muted);
+  padding: 64px 16px;
+}
+
+/* ---------- موبايل ---------- */
+@media (max-width: 600px) {
+  .container { padding: 16px 12px 96px; }
+  .fab { right: 16px; bottom: 16px; }
+}

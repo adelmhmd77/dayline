@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dayline — الحساب</title>
+  <link rel="stylesheet" href="css/shared.css">
+  <!-- الشخص 2: ستايلات صفحة الحساب تتكتب هنا أو في css/account.css -->
+</head>
+<body>
+  <main class="container">
+    <a href="index.html" class="btn">← رجوع</a>
+
+    <!-- الشخص 2: كارت بيانات الحساب (تاسك 2.1) -->
+    <section id="accountInfo"></section>
+
+    <!-- الشخص 2: جدول الشهر (تاسك 2.2) -->
+    <section id="calendar"></section>
+  </main>
+
+  <!-- زرار رفع CSV (تاسك 2.4) -->
+  <button id="uploadCsvBtn" class="fab" aria-label="رفع CSV">+</button>
+
+  <!-- الشخص 2: مودال تفاصيل اليوم (تاسك 2.3) -->
+  <!-- الشخص 2: مودال رفع CSV (تاسك 2.4) -->
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script type="module" src="js/account.js"></script>
+</body>
+</html>
