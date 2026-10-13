@@ -1,0 +1,329 @@
+/* ==========================================================
+   Dayline — account.css
+   ستايلات صفحة الحساب فقط. الألوان من var(--...) في shared.css.
+   ========================================================== */
+
+.hidden {
+  display: none !important;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ---------- 2.1 كارت بيانات الحساب ---------- */
+#backBtn {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+#accountInfo {
+  margin: 50px 0 100px;
+  padding: 20px 24px;
+}
+
+/* كل البيانات في صف واحد على الشاشات الكبيرة */
+.info-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* أزرار صغيرة جوه كارت البيانات */
+.info-item .btn {
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  border-radius: 6px;
+  gap: 4px;
+}
+.info-item.fit {
+  flex: 0 0 auto;
+}
+
+.followers-meta {
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+/* على الشاشات الصغيرة ينزلوا على أكتر من صف */
+@media (max-width: 1000px) {
+  .info-grid {
+    flex-wrap: wrap;
+  }
+  .info-item {
+    flex: 1 1 200px;
+  }
+  .info-item.fit {
+    flex: 1 1 200px;
+  }
+}
+
+.info-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.info-item a,
+.info-item strong,
+.info-item span {
+  overflow-wrap: anywhere;
+}
+
+#accPass {
+  font-family: ui-monospace, Consolas, monospace;
+  letter-spacing: 1px;
+}
+
+.followers-num {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--primary);
+  margin-inline-end: 4px;
+}
+
+.small-input {
+  width: 100px;
+  padding: 4px 8px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+/* ---------- 2.2 التقويم ---------- */
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 8px 0 20px;
+}
+.cal-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+.cal-header .btn {
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+.cal-weekdays,
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.cal-weekdays {
+  margin-bottom: 10px;
+}
+
+.cal-weekdays div {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding: 4px 0;
+}
+
+.day {
+  min-height: 92px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.day:hover {
+  border-color: var(--primary);
+}
+
+.day .num {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.day small {
+  font-size: 0.72rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.day.empty {
+  background: transparent;
+  border: 0;
+  cursor: default;
+}
+
+.day.filled {
+  background: var(--idea-soft);
+  border-color: var(--idea);
+}
+.day.filled .num {
+  color: var(--text);
+}
+
+.day.today {
+  border-color: var(--today);
+  box-shadow: 0 0 0 1px var(--today);
+}
+
+/* ---------- 2.3 مودال اليوم ---------- */
+.modal {
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 12px;
+  inset-inline-end: 16px;
+}
+
+#dayModalTitle,
+#formHeading,
+#csvModalTitle {
+  margin: 0 0 12px;
+  padding-inline-end: 32px;
+  font-size: 1.2rem;
+}
+
+.modal-section {
+  margin: 14px 0;
+}
+.modal-section h4 {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.prompt-box {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.prompt-box .btn {
+  flex-shrink: 0;
+  padding: 4px 12px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.tags .tag {
+  margin: 0;
+}
+
+.csv-errors {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin: 8px 0 0;
+}
+
+/* ---------- 2.4 رفع CSV ---------- */
+.csv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+  margin: 10px 0;
+  display: block;
+  overflow-x: auto;
+}
+.csv-table th,
+.csv-table td {
+  border: 1px solid var(--border);
+  padding: 4px 8px;
+  text-align: start;
+  white-space: nowrap;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.csv-table th {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+.csv-table tr.row-error td {
+  background: color-mix(in srgb, var(--danger) 18%, transparent);
+  color: var(--danger);
+}
+
+input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  background: var(--surface-2);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font: inherit;
+}
+
+/* ---------- رسالة "تم النسخ" ---------- */
+.toast {
+  position: fixed;
+  bottom: 96px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 200;
+}
+.toast.show {
+  opacity: 1;
+}
+
+/* ---------- موبايل ---------- */
+@media (max-width: 600px) {
+  #accountInfo {
+    padding: 16px;
+  }
+  .info-grid {
+    gap: 20px;
+  }
+  .cal-weekdays,
+  .cal-grid {
+    gap: 4px;
+  }
+  .day {
+    min-height: 64px;
+    padding: 4px;
+  }
+  .day small {
+    font-size: 0.65rem;
+  }
+  .followers-num {
+    font-size: 2rem;
+  }
+}
