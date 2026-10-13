@@ -1,12 +1,11 @@
 // طبقة البيانات الحقيقية (Firestore). نفس أسماء وأشكال الدوال اللي الفرونت بيستخدمها.
 //
-// الهيكل في Firestore (كل مستخدم بياناته معزولة تحت uid بتاعه):
-//   users/{uid}/accounts/{accountId}              name, url, username, password, niche, followers, createdAt
-//   users/{uid}/accounts/{accountId}/ideas/{date} date, title, description, prompt, type, keywords, music
-//
-// أي صفحة بتستورد الملف ده بتستنى تسجيل الدخول أوتوماتيك، ولو المستخدم مش مسجّل
-// بتتحوّل لـ login.html. يعني مفيش تعديل مطلوب في home.js أو account.js.
+// الهيكل في Firestore:
+//   accounts/{accountId}              name, url, username, password, niche, followers, createdAt
+//   accounts/{accountId}/ideas/{date} date, title, description, prompt, type, keywords, music
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {
+  getFirestore,
   collection,
   doc,
   addDoc,
@@ -21,19 +20,22 @@ import {
   writeBatch,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
-import { db, waitForUser } from "./auth.js";
 
-export { logout } from "./auth.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyByjpjFaCLPla9lyxuxr7R47ZU8JEXeWQ8",
+  authDomain: "dayline-118d2.firebaseapp.com",
+  projectId: "dayline-118d2",
+  storageBucket: "dayline-118d2.firebasestorage.app",
+  messagingSenderId: "580397961252",
+  appId: "1:580397961252:web:ca19fb3d21464c8f4a88b1",
+  measurementId: "G-MZQ0NWKLWN",
+};
 
-const user = await waitForUser();
-if (!user) {
-  location.replace("login.html");
-  await new Promise(() => {}); // وقف تنفيذ الصفحة لحد ما التحويل يتم
-}
+const db = getFirestore(initializeApp(firebaseConfig));
 
-const accountsCol = collection(db, "users", user.uid, "accounts");
-const accountRef = (id) => doc(db, "users", user.uid, "accounts", id);
-const ideasCol = (id) => collection(db, "users", user.uid, "accounts", id, "ideas");
+const accountsCol = collection(db, "accounts");
+const accountRef = (id) => doc(db, "accounts", id);
+const ideasCol = (id) => collection(db, "accounts", id, "ideas");
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const MONTH_RE = /^\d{4}-\d{2}$/;

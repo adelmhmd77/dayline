@@ -50,9 +50,8 @@ date,title,description,prompt,type,keywords,music
 
 ## ربط Firebase
 
-- `js/auth.js`: تهيئة Firebase وتسجيل الدخول (مفيش حد يستورد من Firebase مباشرة غيره).
-- `js/firebase.js`: دوال Firestore بنفس الأسماء. أي صفحة بتستورده بتتحوّل لـ `login.html` لو مفيش تسجيل دخول.
-- `login.html` + `js/login.js`: صفحة الدخول.
-- `firestore.rules`: كل مستخدم يقرا ويكتب بياناته بس (`users/{uid}/...`).
-- لعمل خروج: `import { logout } from "./firebase.js"` ونادي `logout()` من أي زرار.
+- `js/firebase.js`: تهيئة Firebase ودوال Firestore بنفس الأسماء. مفيش تسجيل دخول.
+- `firestore.rules`: القواعد (مفتوحة حالياً، شوف التحذير تحت).
 - نشر القواعد: `firebase deploy --only firestore:rules` (أو انسخ `firestore.rules` في Console ← Firestore ← Rules).
+
+> تحذير: من غير تسجيل دخول، أي حد يعرف إعدادات المشروع (ظاهرة في كود الموقع) يقدر يقرا ويكتب البيانات، ومنها الباسوردات.

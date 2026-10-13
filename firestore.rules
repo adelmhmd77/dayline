@@ -2,12 +2,11 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // كل مستخدم يقرا ويكتب بياناته هو بس (users/{uid}/...)
-    match /users/{uid}/{document=**} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+    // من غير تسجيل دخول: الوصول مفتوح لمجموعة الحسابات وأفكارها بس
+    match /accounts/{document=**} {
+      allow read, write: if true;
     }
 
-    // أي مسار تاني ممنوع
     match /{document=**} {
       allow read, write: if false;
     }
