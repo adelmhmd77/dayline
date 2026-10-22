@@ -1,57 +1,77 @@
 # Dayline
 
-لوحة تحكم لإدارة أكتر من حساب سوشيال ميديا، مع جدول أفكار بوستات يومي لكل حساب.
+A dashboard for managing multiple social media accounts, with a daily post-ideas calendar for each account.
 
-**الستاك:** HTML + CSS + JS + Firebase
+**Stack:** HTML, CSS, vanilla JavaScript (ES modules), Firebase Firestore
 
-## هيكل الملفات
+## Features
+
+- Home page with a grid of all your accounts (name, niche, followers).
+- Per-account page with the account details and a monthly calendar of post ideas.
+- Each idea stores a title, description, generation prompt, type (image or video), keywords and music.
+- Bulk-import a whole month of ideas from a CSV file.
+
+## Project structure
 
 ```
-index.html         الهوم: شبكة الحسابات (الشخص 1)
-account.html       صفحة الحساب: البيانات والتقويم (الشخص 2)
-css/shared.css     الألوان والأزرار والمودال (مشترك)
-js/home.js         الشخص 1
-js/account.js      الشخص 2
-js/firebase.js     طبقة البيانات (حالياً نسخة مؤقتة على localStorage)
+index.html         Home: accounts grid
+account.html       Account page: details and calendar
+css/shared.css     Shared colors, buttons and modal styles
+css/account.css    Account page styles
+js/home.js         Home page logic
+js/index.js        Home page entry
+js/account.js      Account page logic
+js/firebase.js     Data layer (Firestore)
+demo/              Sample accounts and a sample ideas CSV
+firestore.rules    Firestore security rules
 ```
 
-## قواعد الشغل
+## Running locally
 
-- الألوان من `shared.css` بس: استخدم `var(--primary)` وأخواتها، ومحدش يكتب كود لون مباشرة.
-- الانتقال بين الصفحتين: `account.html?id=ACCOUNT_ID`.
-- أي تعديل في `shared.css` يتم الاتفاق عليه بين الاتنين الأول.
-- لازم يتشغل المشروع من سيرفر محلي (مش بفتح الملف مباشرة) عشان ES modules: `npx serve .` أو `python3 -m http.server`.
+The project uses ES modules, so it must be served over HTTP (opening the file directly will not work):
 
-## دوال البيانات (`js/firebase.js`)
+```bash
+npx serve .
+# or
+python3 -m http.server
+```
 
-| الدالة | الوظيفة |
+Then open the printed local address in your browser.
+
+## Data layer (`js/firebase.js`)
+
+| Function | Purpose |
 |---|---|
-| `getAccounts()` | قائمة الحسابات |
-| `addAccount(data)` | إضافة حساب وترجع الـ id |
-| `getAccount(id)` | بيانات حساب واحد |
-| `updateFollowers(id, n)` | تحديث الفولورز |
-| `getIdeas(id, "YYYY-MM")` | أفكار الشهر (Map بالتاريخ) |
-| `saveIdea(id, idea)` | حفظ أو تعديل فكرة يوم |
-| `importIdeasCSV(id, rows)` | رفع الشهر كله دفعة واحدة |
+| `getAccounts()` | List all accounts |
+| `addAccount(data)` | Add an account and return its id |
+| `getAccount(id)` | Get one account |
+| `updateFollowers(id, n)` | Update the follower count |
+| `getIdeas(id, "YYYY-MM")` | Get a month of ideas, keyed by date |
+| `saveIdea(id, idea)` | Create or update the idea for a day |
+| `importIdeasCSV(id, rows)` | Import a whole month at once |
 
-## شكل البيانات
+## Data model
 
 ```
 accounts/{id}: name, url, username, password, niche, followers, createdAt
 accounts/{id}/ideas/{YYYY-MM-DD}: date, title, description, prompt, type (image|video), keywords, music
 ```
 
-## أعمدة ملف CSV
+## CSV format
 
 ```
 date,title,description,prompt,type,keywords,music
-2026-11-01,فكرة 1,وصف...,برومبت...,video,"كلمة1, كلمة2",اسم الأغنية
+2026-11-01,Idea 1,Description...,Prompt...,video,"keyword1, keyword2",Song name
 ```
 
-## ربط Firebase
+A ready-to-use example is in `demo/sample-ideas-2026-11.csv`.
 
-- `js/firebase.js`: تهيئة Firebase ودوال Firestore بنفس الأسماء. مفيش تسجيل دخول.
-- `firestore.rules`: القواعد (مفتوحة حالياً، شوف التحذير تحت).
-- نشر القواعد: `firebase deploy --only firestore:rules` (أو انسخ `firestore.rules` في Console ← Firestore ← Rules).
+## Firebase setup
 
-> تحذير: من غير تسجيل دخول، أي حد يعرف إعدادات المشروع (ظاهرة في كود الموقع) يقدر يقرا ويكتب البيانات، ومنها الباسوردات.
+1. Create a Firebase project and a Firestore database.
+2. Put your web app config in `js/firebase.js` and your project id in `.firebaserc`.
+3. Deploy the rules: `firebase deploy --only firestore:rules` (or paste `firestore.rules` into Console → Firestore → Rules).
+
+## Security warning
+
+There is no authentication. With the current open rules, anyone who knows the Firebase config (it is visible in the site's code) can read and write the data, including stored account passwords. Add sign-in and tighten `firestore.rules` before using this with real accounts.
